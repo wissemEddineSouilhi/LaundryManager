@@ -14,14 +14,14 @@ namespace LaundryManager.API.Controllers
             _UserService = userService;
         }
 
-        [HttpPost(Name = "Login")]
+        [HttpPost("[action]")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
             var token = await _UserService.LoginAsync(loginDto);
             return Ok(token);
         }
 
-        [HttpPost(Name = "Register")]
+        [HttpPost("[action]")]
         public async Task<IActionResult> Register(CreateUserDto createUserDto)
         {
              await _UserService.RegisterAsync(createUserDto);

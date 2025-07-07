@@ -14,7 +14,7 @@ namespace LaundryManager.API.Controllers
             _CommandService = commandService;
         }
 
-        [HttpPost(Name = "CreateCommand")]
+        [HttpPost("CreateCommand")]
         public async Task<IActionResult> CreateCommand([FromBody] CreateCommandDto dto)
         {
 
@@ -22,7 +22,7 @@ namespace LaundryManager.API.Controllers
             return Created();
         }
 
-        [HttpGet(Name = "GetCommands")]
+        [HttpGet("GetCommands")]
         public async Task<IActionResult> GetCommands()
         {
             var commands = await _CommandService.GetUserCommandsListAsync();
