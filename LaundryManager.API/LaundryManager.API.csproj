@@ -10,4 +10,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\LaundryManager.Application\LaundryManager.Application.csproj" />
+    <ProjectReference Include="..\LaundryManager.Infrastructure\LaundryManager.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace LaundryManager.Domain.Enums
 {
-    public enum StatusEnum
+    public enum CommandStatusEnum
     {
+        Pending = 0,
+        Valid = 1,
+        Invalid = 2
     }
 }

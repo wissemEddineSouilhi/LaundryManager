@@ -1,0 +1,32 @@
+﻿using LaundryManager.Application.Contracts.Services;
+using LaundryManager.Application.Dtos;
+using Microsoft.AspNetCore.Mvc;
+
+namespace LaundryManager.API.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    public class UserController: ControllerBase
+    {
+        private readonly IUserService _UserService;
+        public UserController(IUserService userService)
+        {
+            _UserService = userService;
+        }
+
+        [HttpPost(Name = "Login")]
+        public async Task<IActionResult> Login(LoginDto loginDto)
+        {
+            var token = await _UserService.LoginAsync(loginDto);
+            return Ok(token);
+        }
+
+        [HttpPost(Name = "Register")]
+        public async Task<IActionResult> Register(CreateUserDto createUserDto)
+        {
+             await _UserService.RegisterAsync(createUserDto);
+            return Created();
+        }
+
+    }
+}
