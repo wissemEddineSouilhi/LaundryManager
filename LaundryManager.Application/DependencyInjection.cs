@@ -15,8 +15,10 @@ namespace LaundryManager.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
+            
             services.AddScoped<ICommandService, CommandService>();
             services.AddScoped<IUserService, UserService>();
+
 
             return services;
         }

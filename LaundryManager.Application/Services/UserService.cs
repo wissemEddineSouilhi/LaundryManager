@@ -2,6 +2,8 @@
 using LaundryManager.Application.Dtos;
 using LaundryManager.Domain.Contracts.Repositories;
 using LaundryManager.Domain.Contracts.UnitOfWork;
+using LaundryManager.Domain.Entities;
+using System.Security.Cryptography;
 
 namespace LaundryManager.Application.Services
 {
@@ -9,11 +11,13 @@ namespace LaundryManager.Application.Services
     {
         private readonly IUnitOfWork _UnitOfWork;
         private readonly IUserRepository _UserRepository;
+        private readonly IPasswordHasher _PasswordHasher;
 
-        public UserService(IUnitOfWork unitOfWork, IUserRepository userRepository)
+        public UserService(IUnitOfWork unitOfWork, IUserRepository userRepository, IPasswordHasher passwordHasher)
         {
             _UnitOfWork = unitOfWork;
             _UserRepository = userRepository;
+            _PasswordHasher = passwordHasher;
         }
         public Task<bool> IsUserAdminAsync(string userId)
         {
@@ -25,9 +29,18 @@ namespace LaundryManager.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task RegisterAsync(CreateUserDto createUserDto)
+        public async Task RegisterAsync(CreateUserDto createUserDto)
         {
-            throw new NotImplementedException();
+            var user = new User()
+            {
+                FirstName = createUserDto.firstName,
+                LastName = createUserDto.lastName,
+                Password = _PasswordHasher.Hash(createUserDto.password),
+
+            };
+
+            await _UserRepository.AddAsync(user);
+            await _UnitOfWork.SaveChangesAsync();
         }
     }
 }

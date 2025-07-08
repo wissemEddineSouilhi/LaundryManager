@@ -1,15 +1,12 @@
-﻿using LaundryManager.Domain.Contracts.UnitOfWork;
-using LaundryManager.Infrastructure.Data;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using LaundryManager.Application.Services;
 using LaundryManager.Domain.Contracts.Repositories;
+using LaundryManager.Domain.Contracts.UnitOfWork;
+using LaundryManager.Infrastructure.Data;
 using LaundryManager.Infrastructure.Repositories;
+using LaundryManager.Infrastructure.Security;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LaundryManager.Infrastructure
 {
@@ -27,7 +24,7 @@ namespace LaundryManager.Infrastructure
             services.AddScoped<ICommandStatusRepository, CommandStatusRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
 
             return services;
         }
