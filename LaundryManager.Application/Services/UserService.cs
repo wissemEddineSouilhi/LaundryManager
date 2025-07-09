@@ -4,6 +4,7 @@ using LaundryManager.Domain.Contracts.Repositories;
 using LaundryManager.Domain.Contracts.Security;
 using LaundryManager.Domain.Contracts.UnitOfWork;
 using LaundryManager.Domain.Entities;
+using LaundryManager.Domain.Enums;
 
 namespace LaundryManager.Application.Services
 {
@@ -11,15 +12,17 @@ namespace LaundryManager.Application.Services
     {
         private readonly IUnitOfWork _UnitOfWork;
         private readonly IUserRepository _UserRepository;
+        private readonly IRoleRepository _RoleRepository;
         private readonly IPasswordHasher _PasswordHasher;
         private readonly IJwtTokenService _JwtTokenService;
 
-        public UserService(IUnitOfWork unitOfWork, IUserRepository userRepository, IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService)
+        public UserService(IUnitOfWork unitOfWork, IUserRepository userRepository, IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService,IRoleRepository roleRepository)
         {
             _UnitOfWork = unitOfWork;
             _UserRepository = userRepository;
             _PasswordHasher = passwordHasher;
             _JwtTokenService = jwtTokenService;
+            _RoleRepository = roleRepository;
         }
         public Task<bool> IsUserAdminAsync(string userId)
         {
@@ -58,14 +61,16 @@ namespace LaundryManager.Application.Services
 
         public async Task RegisterAsync(CreateUserDto createUserDto)
         {
+            var defaultRole = await _RoleRepository.FindAsync(r => r.Code == (int)RoleEnum.User);
             var user = new User()
             {
                 FirstName = createUserDto.firstName,
                 LastName = createUserDto.lastName,
                 Password = _PasswordHasher.Hash(createUserDto.password),
-                Email = createUserDto.Email,
-                PhoneNumber = createUserDto.PhoneNumer,
+                Email = createUserDto.email,
+                PhoneNumber = createUserDto.PhoneNumber,
                 CreationDate = DateTime.UtcNow,
+                RoleId = defaultRole.First().Id,
 
             };
 

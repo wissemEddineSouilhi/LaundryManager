@@ -9,15 +9,20 @@ namespace LaundryManager.Infrastructure.Security
 {
     internal class JwtTokenService : IJwtTokenService
     {
-        private readonly IConfigurationManager _ConfigurationManager;
-        internal JwtTokenService(IConfigurationManager configurationManager)
+        private readonly IConfiguration _Configuration;
+        public JwtTokenService(IConfiguration configuration)
         {
-            _ConfigurationManager = configurationManager;
+            _Configuration = configuration;
         }
         public string GenerateToken(string userName)
         {
+            var JwtKey = _Configuration.GetValue<string>("JwtKey");
+            if (string.IsNullOrEmpty(JwtKey))
+            {
+                throw new ArgumentException("JWT Key is not configured in the application settings.");
+            }
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes("jwtKey");
+            var key = Encoding.UTF8.GetBytes(JwtKey);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

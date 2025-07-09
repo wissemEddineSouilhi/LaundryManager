@@ -16,6 +16,7 @@ namespace LaundryManager.API.Controllers
             _UserService = userService;
         }
 
+
         [HttpPost("[action]")]
         [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(TokenDto))]
         public async Task<IActionResult> Login(LoginDto loginDto)

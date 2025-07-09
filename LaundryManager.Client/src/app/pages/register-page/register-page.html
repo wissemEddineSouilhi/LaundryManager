@@ -1,0 +1,43 @@
+
+<div class="inscription-container ">
+<p-card header="Inscription" styleClass="user-form" class="flex justify-content-center">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="p-fluid">
+
+<div class="p-fluid">
+    <div class="field">
+      <label for="email">Email</label>
+      <input pInputText id="email" formControlName="email"/>
+    </div>
+</div>
+<div class="p-fluid">
+    <div class="field">
+      <label for="firstName">Prénom</label>
+      <input pInputText id="firstName" formControlName="firstName"  />
+    </div>
+</div>
+<div class="p-fluid">
+    <div class="field">
+      <label for="lastName">Nom</label>
+      <input pInputText id="lastName" formControlName="lastName"  />
+    </div>
+</div>
+<div class="p-fluid">
+    <div class="field">
+      <label for="password">Mot de passe</label>
+      <input pPassword id="password" formControlName="password"  />
+    </div>
+</div>
+
+<div class="p-fluid">
+    <div class="field">
+      <label for="phoneNumber">Mobile</label>
+      <input pInputText id="phoneNumber" formControlName="phoneNumber"  />
+    </div>
+</div>
+<button pButton type="submit" label="S'inscrire" class="p-mt-3" [disabled]="registerForm.invalid"></button>  
+    
+  </form>
+</p-card>
+</div>
+
+

@@ -283,7 +283,7 @@ export class CreateUserDto implements ICreateUserDto {
     firstName?: string | undefined;
     lastName?: string | undefined;
     password?: string | undefined;
-    phoneNumer?: string | undefined;
+    phoneNumber?: string | undefined;
 
     constructor(data?: ICreateUserDto) {
         if (data) {
@@ -300,7 +300,7 @@ export class CreateUserDto implements ICreateUserDto {
             this.firstName = _data["firstName"];
             this.lastName = _data["lastName"];
             this.password = _data["password"];
-            this.phoneNumer = _data["phoneNumer"];
+            this.phoneNumber = _data["phoneNumer"];
         }
     }
 
@@ -317,7 +317,7 @@ export class CreateUserDto implements ICreateUserDto {
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
         data["password"] = this.password;
-        data["phoneNumer"] = this.phoneNumer;
+        data["phoneNumer"] = this.phoneNumber;
         return data;
     }
 }

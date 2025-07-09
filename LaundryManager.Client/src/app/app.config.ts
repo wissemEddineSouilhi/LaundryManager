@@ -6,6 +6,7 @@ import Aura from '@primeuix/themes/aura';
 import { routes } from './app.routes';
 import { API_BASE_URL } from './api/api-client';
 import { provideHttpClient } from '@angular/common/http';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),

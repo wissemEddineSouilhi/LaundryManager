@@ -15,7 +15,7 @@ namespace LaundryManager.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfigurationManager configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             LaundaryDbContext.isMigration = false;
             services.AddDbContext<LaundaryDbContext>(options =>
@@ -25,6 +25,7 @@ namespace LaundryManager.Infrastructure
             services.AddScoped<ICommandRepository, CommandRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICommandStatusRepository, CommandStatusRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
@@ -33,7 +34,7 @@ namespace LaundryManager.Infrastructure
             return services;
         }
 
-        public static IServiceCollection AddJWTServices(this IServiceCollection services, IConfigurationManager configuration)
+        public static IServiceCollection AddJWTServices(this IServiceCollection services, IConfiguration configuration)
         {
             var JwtKey = configuration.GetValue<string>("JwtKey");
             if (string.IsNullOrEmpty(JwtKey))

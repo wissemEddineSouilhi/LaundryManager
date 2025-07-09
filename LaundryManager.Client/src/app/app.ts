@@ -37,6 +37,9 @@ export class App implements OnInit{
       }
 
   get hideLayout(): boolean {
-    return this.router.url === '/login';
+
+    const routes = ['/login', '/register']; // Add more routes as needed
+    return routes.includes(this.router.url);
+    
   }
 }
