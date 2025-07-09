@@ -18,6 +18,6 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/create-command-page/create-command-page').then(m => m.CreateCommandPage)
   },
-//   { path: '', redirectTo: 'login', pathMatch: 'full' }
+   { path: '', redirectTo: 'home', pathMatch: 'full' }
 
 ];

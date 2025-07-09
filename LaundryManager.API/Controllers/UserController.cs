@@ -1,6 +1,8 @@
 ﻿using LaundryManager.Application.Contracts.Services;
 using LaundryManager.Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 
 namespace LaundryManager.API.Controllers
 {
@@ -15,6 +17,7 @@ namespace LaundryManager.API.Controllers
         }
 
         [HttpPost("[action]")]
+        [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(TokenDto))]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
             var token = await _UserService.LoginAsync(loginDto);
@@ -24,7 +27,7 @@ namespace LaundryManager.API.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> Register(CreateUserDto createUserDto)
         {
-             await _UserService.RegisterAsync(createUserDto);
+            await _UserService.RegisterAsync(createUserDto);
             return Created();
         }
 

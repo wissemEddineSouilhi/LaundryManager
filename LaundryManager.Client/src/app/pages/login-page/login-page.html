@@ -32,6 +32,8 @@
           label="Se connecter"
           class="p-button-success w-full mt-3"
         ></button>
+
+        <p *ngIf="error" style="color: red;">{{ error }}</p>
       </div>
     </form>
   </p-card>

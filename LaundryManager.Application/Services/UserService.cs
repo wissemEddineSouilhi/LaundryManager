@@ -24,7 +24,7 @@ namespace LaundryManager.Application.Services
             throw new NotImplementedException();
         }
 
-        public Task<string> LoginAsync(LoginDto loginDto)
+        public Task<TokenDto> LoginAsync(LoginDto loginDto)
         {
             throw new NotImplementedException();
         }

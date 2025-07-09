@@ -10,7 +10,7 @@ namespace LaundryManager.Application.Contracts.Services
     public interface IUserService
     {
         Task<bool> IsUserAdminAsync(string userId);
-        Task<string> LoginAsync(LoginDto loginDto);
+        Task<TokenDto> LoginAsync(LoginDto loginDto);
         Task RegisterAsync(CreateUserDto createUserDto);
 
     }
