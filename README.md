@@ -20,6 +20,7 @@ This is a full-stack web application using **Angular 20.0** for the frontend and
 - Node.js
 - Angular cli
 - .NET 8 SDK
+- NSwag.ConsoleCore
 - Visual Studio 2022+ and VS Code
 
   
