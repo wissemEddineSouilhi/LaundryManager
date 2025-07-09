@@ -11,6 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddJWTServices(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddCors(options =>
 {

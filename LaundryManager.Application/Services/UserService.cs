@@ -1,9 +1,9 @@
 ﻿using LaundryManager.Application.Contracts.Services;
 using LaundryManager.Application.Dtos;
 using LaundryManager.Domain.Contracts.Repositories;
+using LaundryManager.Domain.Contracts.Security;
 using LaundryManager.Domain.Contracts.UnitOfWork;
 using LaundryManager.Domain.Entities;
-using System.Security.Cryptography;
 
 namespace LaundryManager.Application.Services
 {
@@ -12,21 +12,48 @@ namespace LaundryManager.Application.Services
         private readonly IUnitOfWork _UnitOfWork;
         private readonly IUserRepository _UserRepository;
         private readonly IPasswordHasher _PasswordHasher;
+        private readonly IJwtTokenService _JwtTokenService;
 
-        public UserService(IUnitOfWork unitOfWork, IUserRepository userRepository, IPasswordHasher passwordHasher)
+        public UserService(IUnitOfWork unitOfWork, IUserRepository userRepository, IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService)
         {
             _UnitOfWork = unitOfWork;
             _UserRepository = userRepository;
             _PasswordHasher = passwordHasher;
+            _JwtTokenService = jwtTokenService;
         }
         public Task<bool> IsUserAdminAsync(string userId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<TokenDto> LoginAsync(LoginDto loginDto)
+        public async Task<TokenDto> LoginAsync(LoginDto loginDto)
         {
-            throw new NotImplementedException();
+            var isExist = await _UserRepository.ExistsAsync(u => u.Email == loginDto.UserName);
+            if (!isExist)
+            {
+                throw new Exception("User not found");
+            }
+
+            var users = await _UserRepository.FindAsync(u => u.Email == loginDto.UserName);
+            if (users == null || !users.Any())
+            {
+                throw new Exception("User not found");
+            }
+            if (users.Count() > 1)
+            {
+                throw new Exception("Multiple users found with the same email");
+            }
+
+            var isValidPassword = _PasswordHasher.Verify(loginDto.Password, users.First().Password);
+            if (!isValidPassword)
+            {
+                throw new Exception("Invalid password");
+            }
+
+           var token = _JwtTokenService.GenerateToken(users.First().Email);
+
+            return new TokenDto { TokenJwt = token };
+
         }
 
         public async Task RegisterAsync(CreateUserDto createUserDto)
@@ -36,6 +63,9 @@ namespace LaundryManager.Application.Services
                 FirstName = createUserDto.firstName,
                 LastName = createUserDto.lastName,
                 Password = _PasswordHasher.Hash(createUserDto.password),
+                Email = createUserDto.Email,
+                PhoneNumber = createUserDto.PhoneNumer,
+                CreationDate = DateTime.UtcNow,
 
             };
 

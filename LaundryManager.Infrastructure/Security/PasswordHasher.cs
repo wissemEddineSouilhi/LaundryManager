@@ -1,4 +1,4 @@
-﻿using LaundryManager.Application.Services;
+﻿using LaundryManager.Domain.Contracts.Security;
 using System.Security.Cryptography;
 using System.Text;
 

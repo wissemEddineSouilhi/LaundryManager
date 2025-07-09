@@ -2,7 +2,11 @@
 using LaundryManager.Application.Services;
 using LaundryManager.Domain.Contracts.Repositories;
 using LaundryManager.Domain.Contracts.UnitOfWork;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +19,14 @@ namespace LaundryManager.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            
+
             services.AddScoped<ICommandService, CommandService>();
             services.AddScoped<IUserService, UserService>();
 
 
             return services;
         }
+
+       
     }
 }

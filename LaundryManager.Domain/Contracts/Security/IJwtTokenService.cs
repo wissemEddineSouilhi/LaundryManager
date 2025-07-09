@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace LaundryManager.Domain.Contracts.Security
 {
-    public interface IPasswordHasher
+    public interface IJwtTokenService
     {
-        string Hash(string password);
-        bool Verify(string password, string hash);
+         string GenerateToken(string userName);
     }
 }

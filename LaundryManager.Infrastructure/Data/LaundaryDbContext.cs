@@ -1,10 +1,14 @@
 ﻿using LaundryManager.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace LaundryManager.Infrastructure.Data
 {
     internal class LaundaryDbContext : DbContext
     {
+        public LaundaryDbContext(DbContextOptions<LaundaryDbContext> options) : base(options)
+        {
+        }
 
         internal DbSet<User> Users { get; set; }
         internal DbSet<Role> Roles { get; set; }
@@ -117,6 +121,7 @@ namespace LaundryManager.Infrastructure.Data
         internal static bool isMigration = true;
         protected override void OnConfiguring(DbContextOptionsBuilder dbContextOptionsBuilder)
         {
+
             if (isMigration)
             {
                 dbContextOptionsBuilder.UseSqlServer("Data Source= 127.0.0.1,1433;Initial Catalog=LaundryManagerDb;User Id=sa;Password=TestDeploymentPWD01@;TrustServerCertificate=True");
