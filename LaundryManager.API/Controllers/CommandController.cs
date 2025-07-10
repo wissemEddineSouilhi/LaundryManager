@@ -1,10 +1,12 @@
 ﻿using LaundryManager.Application.Contracts.Services;
 using LaundryManager.Application.Dtos;
 using LaundryManager.Domain.Contracts.Security;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LaundryManager.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class CommandController: ControllerBase

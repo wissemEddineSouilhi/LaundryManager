@@ -1,6 +1,6 @@
 .inscription-card {
 
-  max-width: 400px; margin: auto;
+  max-width: 800px; margin: auto;
 }
 
 .inscription-container {
@@ -25,4 +25,8 @@ label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
+}
+
+.full-width {
+  width: 100%;
 }

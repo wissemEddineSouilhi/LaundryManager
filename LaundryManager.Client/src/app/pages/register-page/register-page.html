@@ -6,34 +6,35 @@
 <div class="p-fluid">
     <div class="field">
       <label for="email">Email</label>
-      <input pInputText id="email" formControlName="email"/>
+      <input pInputText id="email" formControlName="email" class="full-width" />
     </div>
 </div>
 <div class="p-fluid">
     <div class="field">
       <label for="firstName">Prénom</label>
-      <input pInputText id="firstName" formControlName="firstName"  />
+      <input pInputText id="firstName" formControlName="firstName" class="full-width" />
     </div>
 </div>
 <div class="p-fluid">
     <div class="field">
       <label for="lastName">Nom</label>
-      <input pInputText id="lastName" formControlName="lastName"  />
+      <input pInputText id="lastName" formControlName="lastName" class="full-width" />
+    </div>
+</div>
+<div class="p-fluid">
+    <div class="field">
+      <label for="phoneNumber">Mobile</label>
+      <input pInputText id="phoneNumber" formControlName="phoneNumber" class="full-width" />
     </div>
 </div>
 <div class="p-fluid">
     <div class="field">
       <label for="password">Mot de passe</label>
-      <input pPassword id="password" formControlName="password"  />
+      <p-password formControlName="password" [toggleMask]="true" [feedback]="true" class="full-width"></p-password>
     </div>
 </div>
 
-<div class="p-fluid">
-    <div class="field">
-      <label for="phoneNumber">Mobile</label>
-      <input pInputText id="phoneNumber" formControlName="phoneNumber"  />
-    </div>
-</div>
+
 <button pButton type="submit" label="S'inscrire" class="p-mt-3" [disabled]="registerForm.invalid"></button>  
     
   </form>

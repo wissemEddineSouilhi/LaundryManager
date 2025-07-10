@@ -32,6 +32,15 @@
           label="Se connecter"
           class="p-button-success w-full mt-3"
         ></button>
+        
+        <button
+          pButton
+          label="Créer un compte"
+          class="p-button-text w-full mt-2"
+          [routerLink]="'/register'"
+          type="button"
+          ></button>
+
 
         <p *ngIf="error" style="color: red;">{{ error }}</p>
       </div>

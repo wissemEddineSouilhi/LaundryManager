@@ -7,6 +7,7 @@ import { PasswordModule } from 'primeng/password';
 import { CardModule } from 'primeng/card';
 import {Client, LoginDto} from '../../api/api-client'
 import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-login-page',
   imports: [
@@ -15,7 +16,8 @@ import { Router } from '@angular/router';
     InputTextModule,
     PasswordModule,
     ButtonModule,
-    CardModule
+    CardModule,
+    RouterModule
   ],
   templateUrl: './login-page.html',
   styleUrl: './login-page.scss',
