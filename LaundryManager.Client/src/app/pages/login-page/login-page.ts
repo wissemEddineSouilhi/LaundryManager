@@ -7,8 +7,6 @@ import { PasswordModule } from 'primeng/password';
 import { CardModule } from 'primeng/card';
 import {Client, LoginDto} from '../../api/api-client'
 import { Router } from '@angular/router';
-import { Injectable, Inject } from '@angular/core';
-import { API_BASE_URL } from '../../api/api-client';
 @Component({
   selector: 'app-login-page',
   imports: [

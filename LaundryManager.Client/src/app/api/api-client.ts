@@ -234,10 +234,55 @@ export class Client {
     }
 }
 
+export class ArticleDto implements IArticleDto {
+    name?: string | undefined;
+    description?: string | undefined;
+    articleTypeId?: string;
+
+    constructor(data?: IArticleDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.articleTypeId = _data["articleTypeId"];
+        }
+    }
+
+    static fromJS(data: any): ArticleDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ArticleDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["articleTypeId"] = this.articleTypeId;
+        return data;
+    }
+}
+
+export interface IArticleDto {
+    name?: string | undefined;
+    description?: string | undefined;
+    articleTypeId?: string;
+}
+
 export class CreateCommandDto implements ICreateCommandDto {
     id?: string;
     reason?: string | undefined;
     comment?: string | undefined;
+    articles?: ArticleDto[] | undefined;
 
     constructor(data?: ICreateCommandDto) {
         if (data) {
@@ -253,6 +298,11 @@ export class CreateCommandDto implements ICreateCommandDto {
             this.id = _data["id"];
             this.reason = _data["reason"];
             this.comment = _data["comment"];
+            if (Array.isArray(_data["articles"])) {
+                this.articles = [] as any;
+                for (let item of _data["articles"])
+                    this.articles!.push(ArticleDto.fromJS(item));
+            }
         }
     }
 
@@ -268,6 +318,11 @@ export class CreateCommandDto implements ICreateCommandDto {
         data["id"] = this.id;
         data["reason"] = this.reason;
         data["comment"] = this.comment;
+        if (Array.isArray(this.articles)) {
+            data["articles"] = [];
+            for (let item of this.articles)
+                data["articles"].push(item.toJSON());
+        }
         return data;
     }
 }
@@ -276,6 +331,7 @@ export interface ICreateCommandDto {
     id?: string;
     reason?: string | undefined;
     comment?: string | undefined;
+    articles?: ArticleDto[] | undefined;
 }
 
 export class CreateUserDto implements ICreateUserDto {
@@ -300,7 +356,7 @@ export class CreateUserDto implements ICreateUserDto {
             this.firstName = _data["firstName"];
             this.lastName = _data["lastName"];
             this.password = _data["password"];
-            this.phoneNumber = _data["phoneNumer"];
+            this.phoneNumber = _data["phoneNumber"];
         }
     }
 
@@ -317,7 +373,7 @@ export class CreateUserDto implements ICreateUserDto {
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
         data["password"] = this.password;
-        data["phoneNumer"] = this.phoneNumber;
+        data["phoneNumber"] = this.phoneNumber;
         return data;
     }
 }
@@ -327,7 +383,7 @@ export interface ICreateUserDto {
     firstName?: string | undefined;
     lastName?: string | undefined;
     password?: string | undefined;
-    phoneNumer?: string | undefined;
+    phoneNumber?: string | undefined;
 }
 
 export class LoginDto implements ILoginDto {

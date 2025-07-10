@@ -26,7 +26,7 @@ namespace LaundryManager.API.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<IActionResult> Register(CreateUserDto createUserDto)
+        public async Task<IActionResult> Register([FromBody] CreateUserDto createUserDto)
         {
             await _UserService.RegisterAsync(createUserDto);
             return Created();
