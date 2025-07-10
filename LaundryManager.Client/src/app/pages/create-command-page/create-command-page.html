@@ -1,11 +1,11 @@
 <form [formGroup]="commandForm" (ngSubmit)="submit()" class="p-fluid">
   <div class="p-field">
-    <label for="reason">Reason</label>
+    <label for="reason">Raison</label>
     <input pInputText id="reason" formControlName="reason" />
   </div>
 
   <div class="p-field">
-    <label for="comment">Comment</label>
+    <label for="comment">Comentaire</label>
     <textarea pInputTextarea id="comment" formControlName="comment" rows="3"></textarea>
   </div>
 
@@ -14,28 +14,21 @@
       <h5>Article {{ i + 1 }}</h5>
 
       <div class="p-field">
-        <label for="articleName-{{ i }}">Article Name</label>
-        <input pInputText id="articleName-{{ i }}" formControlName="articleName" />
+        <label for="articleName-{{ i }}">Nom de l'article</label>
+        <input pInputText id="articleName-{{ i }}" formControlName="name" />
+      </div>
+      <div class="p-field">
+        <label for="articleDescription-{{ i }}">Description</label>
+        <input pInputText id="articleDescription-{{ i }}" formControlName="description" />
       </div>
 
       <div class="p-field">
-        <label for="quantity-{{ i }}">Quantity</label>
+        <label for="quantity-{{ i }}">Quantité</label>
         <input type="number" pInputText id="quantity-{{ i }}" formControlName="quantity" />
       </div>
       <div class="p-field">
       <p-select [options]="articleTypes" formControlName="articleTypeId" optionLabel="name" optionValue="id" laceholder="Select an article type" class="w-full md:w-56" />
-      </div>
-      <!-- <div class="p-field">
-        <label for="articleTypeId-{{ i }}">Article Type</label>
-            <p-dropdown
-                id="articleTypeId-{{ i }}"
-                [options]="articleTypes"
-                optionLabel="name"
-                optionValue="id"
-                formControlName="articleTypeId"
-                placeholder="Select an article type"
-            ></p-dropdown>
-        </div> -->
+      </div>  
 
       <button pButton type="button" icon="pi pi-trash" class="p-button-danger" (click)="removeArticle(i)">
         Remove Article

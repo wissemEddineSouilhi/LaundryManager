@@ -1,6 +1,7 @@
 ﻿using LaundryManager.Application.Contracts.Services;
 using LaundryManager.Application.Dtos;
 using LaundryManager.Domain.Contracts.Repositories;
+using LaundryManager.Domain.Contracts.Security;
 using LaundryManager.Domain.Contracts.UnitOfWork;
 using LaundryManager.Domain.Entities;
 using LaundryManager.Domain.Enums;
@@ -17,12 +18,19 @@ namespace LaundryManager.Application.Services
         private readonly IUnitOfWork _UnitOfWork;
         private readonly ICommandRepository _CommandRepository;
         private readonly ICommandStatusRepository _CommandStatusRepository;
+        private readonly IArticleRepository _ArticleRepository;
+        private readonly IUserRepository _UserRepository;
+        private readonly IJwtTokenService _JwtTokenService;
 
-        public CommandService(IUnitOfWork unitOfWork, ICommandRepository commandRepository, ICommandStatusRepository commandStatusRepository)
+        public CommandService(IUnitOfWork unitOfWork, ICommandRepository commandRepository, ICommandStatusRepository commandStatusRepository, IArticleRepository articleRepository,IUserRepository userRepository, IJwtTokenService jwtTokenService)
         {
             _UnitOfWork = unitOfWork;
             _CommandRepository = commandRepository;
             _CommandStatusRepository = commandStatusRepository;
+            _ArticleRepository = articleRepository;
+            _JwtTokenService = jwtTokenService;
+            _UserRepository = userRepository;
+
         }
 
         public async Task CreateCommmandAsync(CreateCommandDto commandDto)
@@ -39,16 +47,36 @@ namespace LaundryManager.Application.Services
 
             var statusId = commandStatuses.First().Id;
 
+            var userName = _JwtTokenService.GetCurrentUsername();
+            var users = await _UserRepository.FindAsync(u => u.Email == userName);
+            var userId = users.First().Id;
+
             var command = new Command()
             {
+                Id = Guid.NewGuid(),
                 Comment = commandDto.Comment,
                 Reason = commandDto.Reason,
                 CreationDate = DateTime.Now,
-               // UserId = commandDto.UserId,//currentUser
-                StatusId = statusId
-            };
+                UserId = userId,
+                StatusId = statusId,
 
+            };
             await _CommandRepository.AddAsync(command);
+
+            foreach (var articleDto in commandDto.Articles)
+            {
+                var article = new Article()
+                {
+                    ArticleTypeId = articleDto.ArticleTypeId,
+                    CommandId = command.Id,
+                    Name = articleDto.Name,
+                    Description = articleDto.Description,
+                    CreationDate = DateTime.UtcNow
+                };
+                await _ArticleRepository.AddAsync(article);
+            }
+
+            
             await _UnitOfWork.SaveChangesAsync();
         }
 

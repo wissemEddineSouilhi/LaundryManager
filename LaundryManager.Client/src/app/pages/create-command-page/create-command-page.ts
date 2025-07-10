@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Client, CreateCommandDto, CreateUserDto, LoginDto} from '../../api/api-client'
+import {ArticleTypeDto, Client, CreateCommandDto, CreateUserDto, LoginDto} from '../../api/api-client'
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators,FormsModule, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { CardModule } from 'primeng/card';
@@ -9,7 +9,7 @@ import { ButtonModule } from 'primeng/button';
 import { FloatLabel } from 'primeng/floatlabel';
 import {CommonModule} from '@angular/common';
 import { Select } from 'primeng/select';
-
+import { Observable, throwError as _observableThrow, of } from 'rxjs';
 @Component({
   selector: 'app-create-command-page',
   imports: [FormsModule,ReactiveFormsModule,CardModule,InputTextModule,PasswordModule,ButtonModule,CommonModule,Select],
@@ -22,16 +22,18 @@ export class CreateCommandPage implements OnInit  {
 
   
 commandForm!: FormGroup;
-articleTypes: ArticleTypeDto[] = [
-  { id: '6f9619ff-8b86-d011-b42d-00cf4fc964ff', name: 'Type A' },
-  { id: '7f9619ff-8b86-d011-b42d-00cf4fc964ff', name: 'Type B' },
-  { id: '8f9619ff-8b86-d011-b42d-00cf4fc964ff', name: 'Type C' },
-];
+articleTypes: ArticleTypeDto[] = [];
   
 
   constructor(private fb: FormBuilder,  private client: Client, private router: Router,) {}
   
   ngOnInit(): void {
+    this.initForm();
+      this.loadArticleTypes();
+  }
+
+
+  initForm(): void {
     this.commandForm = this.fb.group({
       reason: [''],
       comment: [''],
@@ -39,14 +41,14 @@ articleTypes: ArticleTypeDto[] = [
     });
   }
 
-
   get articles(): FormArray {
     return this.commandForm.get('articles') as FormArray;
   }
 
   addArticle(): void {
     const articleGroup = this.fb.group({
-      articleName: ['', Validators.required],
+      name: ['', Validators.required],
+      description: ['', Validators.required],
       quantity: [1, [Validators.required, Validators.min(1)]],
       articleTypeId: [null, Validators.required]
     });
@@ -55,6 +57,13 @@ articleTypes: ArticleTypeDto[] = [
 
   removeArticle(index: number): void {
     this.articles.removeAt(index);
+  }
+
+  loadArticleTypes(): void {
+    this.client.getArticleTypes().subscribe({
+      next: (data) => this.articleTypes = data,
+      error: (err) => console.error('Error loading article types', err)
+    });
   }
 
   submit(): void {
@@ -69,7 +78,7 @@ articleTypes: ArticleTypeDto[] = [
       },
       error: (err) => {
         
-        alert('cmand creation failed: ' + err.message)
+        alert('command creation failed: ' + err.message)
       },
     });      
     }

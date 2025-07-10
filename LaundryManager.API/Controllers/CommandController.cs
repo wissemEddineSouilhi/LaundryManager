@@ -1,5 +1,6 @@
 ﻿using LaundryManager.Application.Contracts.Services;
 using LaundryManager.Application.Dtos;
+using LaundryManager.Domain.Contracts.Security;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LaundryManager.API.Controllers
@@ -9,16 +10,16 @@ namespace LaundryManager.API.Controllers
     public class CommandController: ControllerBase
     {
         private readonly ICommandService _CommandService;
-        public CommandController(ICommandService commandService)
+
+        public CommandController(ICommandService commandService, IJwtTokenService jwtTokenService)
         {
             _CommandService = commandService;
         }
 
         [HttpPost("CreateCommand")]
-        public async Task<IActionResult> CreateCommand([FromBody] CreateCommandDto dto)
+        public async Task<IActionResult> CreateCommand(CreateCommandDto dto)
         {
-
-           await _CommandService.CreateCommmandAsync(dto);
+            await _CommandService.CreateCommmandAsync(dto);
             return Created();
         }
 

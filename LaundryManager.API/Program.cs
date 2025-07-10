@@ -30,25 +30,15 @@ builder.Services.AddCors(options =>
         });
 });
 
+builder.Services.AddHttpContextAccessor();
+
 
 var app = builder.Build();
-app.UseExceptionHandler(errorApp =>
+app.Use(async (context, next) =>
 {
-    errorApp.Run(async context =>
-    {
-        context.Response.StatusCode = 500;
-        context.Response.ContentType = "application/json";
-
-        var error = context.Features.Get<IExceptionHandlerFeature>()?.Error;
-
-        var response = new
-        {
-            Message = "An unexpected error occurred.",
-            Details = error?.Message
-        };
-
-        await context.Response.WriteAsJsonAsync(response);
-    });
+    
+    Console.WriteLine($"Request: {context.Request.Method} {context.Request.Path}");
+    await next();
 });
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

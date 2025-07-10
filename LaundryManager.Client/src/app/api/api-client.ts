@@ -27,6 +27,64 @@ export class Client {
     }
 
     /**
+     * @return OK
+     */
+    getArticleTypes(): Observable<ArticleTypeDto[]> {
+        let url_ = this.baseUrl + "/Article/GetArticleTypes";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetArticleTypes(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetArticleTypes(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ArticleTypeDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ArticleTypeDto[]>;
+        }));
+    }
+
+    protected processGetArticleTypes(response: HttpResponseBase): Observable<ArticleTypeDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ArticleTypeDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<[]>(null as any);
+    }
+
+    /**
      * @param body (optional) 
      * @return OK
      */
@@ -278,8 +336,47 @@ export interface IArticleDto {
     articleTypeId?: string;
 }
 
-export class CreateCommandDto implements ICreateCommandDto {
+export class ArticleTypeDto implements IArticleTypeDto {
     id?: string;
+    name?: string | undefined;
+
+    constructor(data?: IArticleTypeDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): ArticleTypeDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ArticleTypeDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data;
+    }
+}
+
+export interface IArticleTypeDto {
+    id?: string;
+    name?: string | undefined;
+}
+
+export class CreateCommandDto implements ICreateCommandDto {
     reason?: string | undefined;
     comment?: string | undefined;
     articles?: ArticleDto[] | undefined;
@@ -295,7 +392,6 @@ export class CreateCommandDto implements ICreateCommandDto {
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["id"];
             this.reason = _data["reason"];
             this.comment = _data["comment"];
             if (Array.isArray(_data["articles"])) {
@@ -315,20 +411,18 @@ export class CreateCommandDto implements ICreateCommandDto {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
         data["reason"] = this.reason;
         data["comment"] = this.comment;
         if (Array.isArray(this.articles)) {
             data["articles"] = [];
             for (let item of this.articles)
-                data["articles"].push(item.toJSON());
+                data["articles"].push(item);
         }
         return data;
     }
 }
 
 export interface ICreateCommandDto {
-    id?: string;
     reason?: string | undefined;
     comment?: string | undefined;
     articles?: ArticleDto[] | undefined;

@@ -1,4 +1,6 @@
 ﻿using LaundryManager.Domain.Contracts.Security;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,9 +12,11 @@ namespace LaundryManager.Infrastructure.Security
     internal class JwtTokenService : IJwtTokenService
     {
         private readonly IConfiguration _Configuration;
-        public JwtTokenService(IConfiguration configuration)
+        private readonly IHttpContextAccessor _HttpContextAccessor;
+        public JwtTokenService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _Configuration = configuration;
+            _HttpContextAccessor = httpContextAccessor;
         }
         public string GenerateToken(string userName)
         {
@@ -29,7 +33,7 @@ namespace LaundryManager.Infrastructure.Security
                 Subject = new ClaimsIdentity(new[]
                 {
                         new Claim(ClaimTypes.Name, userName)
-                    }),
+                }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
@@ -40,6 +44,21 @@ namespace LaundryManager.Infrastructure.Security
             var jwt = tokenHandler.WriteToken(token);
 
             return jwt;
+        }
+
+        public string GetCurrentUsername()
+        {
+            var user = _HttpContextAccessor.HttpContext?.User;
+            var userName = user?.Identity?.Name;
+            if (userName == null)
+                throw new Exception("User is not authenticated or username is not available in the context.");
+            return userName;
+        }
+
+        public string? GetClaim(string claimType)
+        {
+            var user = _HttpContextAccessor.HttpContext?.User;
+            return user?.FindFirst(claimType)?.Value;
         }
     }
 }

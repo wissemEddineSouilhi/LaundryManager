@@ -17,8 +17,7 @@ namespace LaundryManager.API.Controllers
         }
 
         [HttpGet("GetArticleTypes")]
-        [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(List<ArticleTypeDto>))]
-        public async Task<IActionResult> GetArticleTypes()
+        public async Task<ActionResult<List<ArticleTypeDto>>> GetArticleTypes()
         {
             var articleTypes = await _ArticleService.GetArticleTypesAsync();
             return Ok(articleTypes);

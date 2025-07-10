@@ -8,6 +8,7 @@ namespace LaundryManager.Domain.Contracts.Security
 {
     public interface IJwtTokenService
     {
+        public string GetCurrentUsername();
          string GenerateToken(string userName);
     }
 }
