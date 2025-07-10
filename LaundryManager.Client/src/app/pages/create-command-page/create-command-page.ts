@@ -74,7 +74,7 @@ articleTypes: ArticleTypeDto[] = [];
       this.client.createCommand(newCommand).subscribe({
        next: (response) => {
         alert('command created successfully!')
-        
+        this.router.navigate(['']);
       },
       error: (err) => {
         

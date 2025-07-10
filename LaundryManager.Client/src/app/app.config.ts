@@ -5,7 +5,8 @@ import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { routes } from './app.routes';
 import { API_BASE_URL } from './api/api-client';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './api/interseptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,5 +21,8 @@ export const appConfig: ApplicationConfig = {
             }
         }),
     { provide: API_BASE_URL, useValue: 'https://localhost:7223' },  
+    provideHttpClient(
+      withInterceptors([authInterceptor])
+    )
   ]
 };
