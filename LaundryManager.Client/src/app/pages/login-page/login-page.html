@@ -1,49 +1,24 @@
 <div class="login-container">
-  <p-card header="Connexion à votre blanchisserie" styleClass="login-card">
-    <form (ngSubmit)="login()">
+  <p-card header="Connexion" styleClass="login-card">
+    <form [formGroup]="loginForm" (ngSubmit)="login()" class="p-fluid">
       <div class="p-fluid">
         <div class="field">
           <label for="email">Adresse e-mail</label>
-          <input
-            id="email"
-            type="email"
-            pInputText
-            [(ngModel)]="email"
-            name="email"
-            required
-          />
+          <input pInputText id="email" formControlName="email" class="full-width" />
         </div>
-
-        <div class="field">
-          <label for="password">Mot de passe</label>
-          <input
-            id="password"
-            type="password"
-            pPassword
-            [(ngModel)]="password"
-            name="password"
-            required
-          />
-        </div>
-
-        <button
-          pButton
-          type="submit"
-          label="Se connecter"
-          class="p-button-success w-full mt-3"
-        ></button>
-        
-        <button
-          pButton
-          label="Créer un compte"
-          class="p-button-text w-full mt-2"
-          [routerLink]="'/register'"
-          type="button"
-          ></button>
-
-
-        <p *ngIf="error" style="color: red;">{{ error }}</p>
       </div>
-    </form>
+  <div class="p-fluid">
+    <div class="field">
+      <label for="password">Mot de passe</label>
+      <p-password formControlName="password" [feedback]="false" [toggleMask]="true"  class="full-width" ></p-password>
+    </div>
+  </div>
+        <button pButton type="submit" label="Se connecter" class="p-button-success w-full mt-3 full-width"></button>  
+         <div class="text-center mt-3">
+        <span>Pas encore de compte ?</span>
+        <a [routerLink]="'/register'" class="p-button-link ml-2">Créer un compte</a>
+      </div>
+  </form>
   </p-card>
 </div>
+

@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, Validators,ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { CardModule } from 'primeng/card';
@@ -17,43 +17,48 @@ import { RouterModule } from '@angular/router';
     PasswordModule,
     ButtonModule,
     CardModule,
-    RouterModule
+    RouterModule,
+    ReactiveFormsModule
   ],
   templateUrl: './login-page.html',
   styleUrl: './login-page.scss',
 })
-export class LoginPage {
-  // constructor(private client : Client , private router: Router){}
+export class LoginPage implements OnInit {
+  loginForm!: FormGroup;
   constructor(
+    private fb: FormBuilder,
     private client: Client,
     private router: Router,
   ) {}
+  ngOnInit(): void {
+     this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+    });
+  }
 
-  email = '';
-  password = '';
-  error = '';
 
   login() {
-    console.log('Logging in:', this.email, this.password);
-    const logindto = new LoginDto() ;    
-    logindto.userName= this.email,
-    logindto.password= this.password
-  
-    this.client.login(logindto).subscribe({
+    if (this.loginForm.valid) {
+      const formValues = this.loginForm.value;
+      const logindto = new LoginDto(formValues);
+      this.client.login(logindto).subscribe({
        next: (response) => {
-        // Save token to localStorage/sessionStorage
+
         if(response.tokenJwt !== undefined){
           localStorage.setItem('accessToken', response.tokenJwt?.toString());
-          // Navigate or update app state
+    
         this.router.navigate(['']);
         }
         
         
       },
       error: (err) => {
-        this.error = 'Invalid username or password';
-        console.error('Login failed', err);
+        alert('Authentication failed: ' + err.message)
       },
     });
+    }
+  
+    
   }
 }

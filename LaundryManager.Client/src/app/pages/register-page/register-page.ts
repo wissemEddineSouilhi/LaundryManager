@@ -27,7 +27,7 @@ export class RegisterPage implements OnInit {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      phoneNumber: ['', Validators.required] // matches updated DTO
+      phoneNumber: ['', Validators.required]
     });
   }
 

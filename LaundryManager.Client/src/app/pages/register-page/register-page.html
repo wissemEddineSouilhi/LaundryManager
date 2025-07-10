@@ -1,6 +1,6 @@
 
 <div class="inscription-container ">
-<p-card header="Inscription" styleClass="user-form" class="flex justify-content-center">
+<p-card header="Créer un compte" styleClass="register-card" class="flex justify-content-center">
   <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="p-fluid">
 
 <div class="p-fluid">
@@ -30,12 +30,12 @@
 <div class="p-fluid">
     <div class="field">
       <label for="password">Mot de passe</label>
-      <p-password formControlName="password" [toggleMask]="true" [feedback]="true" class="full-width"></p-password>
+      <p-password formControlName="password" [toggleMask]="true" [feedback]="false" class="full-width"></p-password>
     </div>
 </div>
 
-
-<button pButton type="submit" label="S'inscrire" class="p-mt-3" [disabled]="registerForm.invalid"></button>  
+<button pButton type="submit" label="Créer un compte" class="p-button-success w-full mt-3 full-width"></button>  
+<!-- <button pButton type="submit" label="S'inscrire" class="p-mt-3" [disabled]="registerForm.invalid"></button>   -->
     
   </form>
 </p-card>
