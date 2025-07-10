@@ -8,16 +8,25 @@ import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { FloatLabel } from 'primeng/floatlabel';
 import {CommonModule} from '@angular/common';
+import { Select } from 'primeng/select';
 
 @Component({
   selector: 'app-create-command-page',
-  imports: [FormsModule,ReactiveFormsModule,CardModule,InputTextModule,PasswordModule,ButtonModule,CommonModule],
+  imports: [FormsModule,ReactiveFormsModule,CardModule,InputTextModule,PasswordModule,ButtonModule,CommonModule,Select],
   templateUrl: './create-command-page.html',
   styleUrl: './create-command-page.css'
 })
-export class CreateCommandPage implements OnInit  {
-commandForm!: FormGroup;
 
+
+export class CreateCommandPage implements OnInit  {
+
+  
+commandForm!: FormGroup;
+articleTypes: ArticleTypeDto[] = [
+  { id: '6f9619ff-8b86-d011-b42d-00cf4fc964ff', name: 'Type A' },
+  { id: '7f9619ff-8b86-d011-b42d-00cf4fc964ff', name: 'Type B' },
+  { id: '8f9619ff-8b86-d011-b42d-00cf4fc964ff', name: 'Type C' },
+];
   
 
   constructor(private fb: FormBuilder,  private client: Client, private router: Router,) {}
@@ -39,6 +48,7 @@ commandForm!: FormGroup;
     const articleGroup = this.fb.group({
       articleName: ['', Validators.required],
       quantity: [1, [Validators.required, Validators.min(1)]],
+      articleTypeId: [null, Validators.required]
     });
     this.articles.push(articleGroup);
   }

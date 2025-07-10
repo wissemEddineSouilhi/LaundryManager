@@ -52,6 +52,8 @@ namespace LaundryManager.Application.Services
             await _UnitOfWork.SaveChangesAsync();
         }
 
+
+
         public async Task<CommandDto> GetCommandDetails(Guid commandId)
         {
             var commands = await _CommandRepository.FindAsync(c => c.Id == commandId);

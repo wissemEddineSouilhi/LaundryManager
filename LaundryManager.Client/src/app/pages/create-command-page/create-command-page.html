@@ -22,6 +22,20 @@
         <label for="quantity-{{ i }}">Quantity</label>
         <input type="number" pInputText id="quantity-{{ i }}" formControlName="quantity" />
       </div>
+      <div class="p-field">
+      <p-select [options]="articleTypes" formControlName="articleTypeId" optionLabel="name" optionValue="id" laceholder="Select an article type" class="w-full md:w-56" />
+      </div>
+      <!-- <div class="p-field">
+        <label for="articleTypeId-{{ i }}">Article Type</label>
+            <p-dropdown
+                id="articleTypeId-{{ i }}"
+                [options]="articleTypes"
+                optionLabel="name"
+                optionValue="id"
+                formControlName="articleTypeId"
+                placeholder="Select an article type"
+            ></p-dropdown>
+        </div> -->
 
       <button pButton type="button" icon="pi pi-trash" class="p-button-danger" (click)="removeArticle(i)">
         Remove Article

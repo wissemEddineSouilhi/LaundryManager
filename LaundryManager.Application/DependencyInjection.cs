@@ -11,6 +11,7 @@ namespace LaundryManager.Application
 
             services.AddScoped<ICommandService, CommandService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IArticleService, ArticleService>();
 
 
             return services;

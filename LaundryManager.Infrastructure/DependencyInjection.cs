@@ -26,6 +26,7 @@ namespace LaundryManager.Infrastructure
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICommandStatusRepository, CommandStatusRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IArticleTypeRepository, ArticleTypeRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
