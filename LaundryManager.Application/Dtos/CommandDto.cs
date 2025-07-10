@@ -13,6 +13,6 @@ namespace LaundryManager.Application.Dtos
         public string Reason { get; set; }
         public string Comment { get; set; }
         public Guid UserId { get; set; }
-        public CommandStatus Status { get; set; }
+        public string StatusName { get; set; }
     }
 }

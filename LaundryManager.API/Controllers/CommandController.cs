@@ -26,9 +26,9 @@ namespace LaundryManager.API.Controllers
         }
 
         [HttpGet("GetCommands")]
-        public async Task<IActionResult> GetCommands()
+        public async Task<ActionResult<IList<CommandDto>>> GetCurrentUserCommands()
         {
-            var commands = await _CommandService.GetUserCommandsListAsync();
+            var commands = await _CommandService.GetCurrentUserCommandsListAsync();
             return Ok(commands);
         }
     }

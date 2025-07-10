@@ -19,7 +19,7 @@ namespace LaundryManager.API.Controllers
 
         [HttpPost("[action]")]
         [SwaggerResponse((int)HttpStatusCode.OK, Type = typeof(TokenDto))]
-        public async Task<IActionResult> Login(LoginDto loginDto)
+        public async Task<ActionResult<TokenDto>> Login(LoginDto loginDto)
         {
             var token = await _UserService.LoginAsync(loginDto);
             return Ok(token);

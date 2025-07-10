@@ -35,7 +35,7 @@ namespace LaundryManager.Application.Services
 
         public async Task CreateCommmandAsync(CreateCommandDto commandDto)
         {
-            var commandStatuses = await _CommandStatusRepository.FindAsync(x=>x.Code == (int)CommandStatusEnum.Pending);
+            var commandStatuses = await _CommandStatusRepository.FindAsync(x => x.Code == (int)CommandStatusEnum.Pending);
             if (commandStatuses == null || !commandStatuses.Any())
             {
                 throw new InvalidOperationException("Pending command status not found.");
@@ -47,9 +47,7 @@ namespace LaundryManager.Application.Services
 
             var statusId = commandStatuses.First().Id;
 
-            var userName = _JwtTokenService.GetCurrentUsername();
-            var users = await _UserRepository.FindAsync(u => u.Email == userName);
-            var userId = users.First().Id;
+            Guid userId = await GetCurrentUserId();
 
             var command = new Command()
             {
@@ -76,10 +74,17 @@ namespace LaundryManager.Application.Services
                 await _ArticleRepository.AddAsync(article);
             }
 
-            
+
             await _UnitOfWork.SaveChangesAsync();
         }
 
+        private async Task<Guid> GetCurrentUserId()
+        {
+            var userName = _JwtTokenService.GetCurrentUsername();
+            var users = await _UserRepository.FindAsync(u => u.Email == userName);
+            var userId = users.First().Id;
+            return userId;
+        }
 
 
         public async Task<CommandDto> GetCommandDetails(Guid commandId)
@@ -106,9 +111,24 @@ namespace LaundryManager.Application.Services
                 .First();
         }
 
-        public async Task<IList<CommandDto>> GetUserCommandsListAsync()
-        {
-            throw new NotImplementedException();
+        public async Task<IList<CommandDto>> GetCurrentUserCommandsListAsync()
+        {   
+            var commandsDtos = new List<CommandDto>();
+
+            Guid userId = await GetCurrentUserId();
+            var currentUserCommands = await _CommandRepository.FindAsync(c=>c.UserId == userId);
+          
+            commandsDtos = currentUserCommands.Select(
+                c => new CommandDto
+                {
+                    Id = c.Id,
+                    Reason = c.Reason,
+                    Comment = c.Comment,
+                    UserId = c.UserId,
+                    StatusName = c.Status?.Name!,
+                }).ToList();
+
+            return commandsDtos;
         }
 
         public async Task SetCommandStatusAsync(Guid commandId, CommandStatusEnum commandStatusEnum)

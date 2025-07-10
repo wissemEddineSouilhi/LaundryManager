@@ -13,7 +13,7 @@ namespace LaundryManager.Application.Contracts.Services
     {
         Task CreateCommmandAsync(CreateCommandDto command);
         Task SetCommandStatusAsync(Guid commandId, CommandStatusEnum commandStatusEnum);
-        Task<IList<CommandDto>> GetUserCommandsListAsync();
+        Task<IList<CommandDto>> GetCurrentUserCommandsListAsync();
         Task<CommandDto> GetCommandDetails(Guid commandId);
     }
 }

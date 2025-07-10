@@ -9,6 +9,6 @@ namespace LaundryManager.Domain.Contracts.Repositories
         void Update(T entity);
         void Remove(T entity);
         Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate);
-        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
+        Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, params string[] navigationProps);
     }
 }

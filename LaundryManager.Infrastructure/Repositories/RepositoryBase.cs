@@ -30,9 +30,16 @@ namespace LaundryManager.Infrastructure.Repositories
             return await _DbSet.AnyAsync(predicate);
         }
 
-        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
+        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, params string[] navigationProps)
         {
-            return await _DbSet.Where(predicate).ToListAsync();
+            IQueryable<T> query = _DbSet;
+
+            foreach (var navProp in navigationProps)
+            {
+                query = query.Include(navProp);
+            }
+
+            return await query.Where(predicate).ToListAsync();
         }
 
         public async Task<IList<T>> GetAllAsync()
