@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {Client, CreateUserDto, LoginDto} from '../../api/api-client'
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators,FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -14,13 +14,14 @@ import { FloatLabel } from 'primeng/floatlabel';
   templateUrl: './register-page.html',
   styleUrl: './register-page.css'
 })
-export class RegisterPage {
+export class RegisterPage implements OnInit {
 
+  registerForm!: FormGroup;
 
-
-   registerForm: FormGroup;
-
-  constructor(private fb: FormBuilder,  private client: Client, private router: Router,) {
+  constructor(private fb: FormBuilder,  private client: Client, private router: Router) {}
+  
+  
+  ngOnInit(): void {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       firstName: ['', Validators.required],
