@@ -22,7 +22,7 @@ namespace LaundryManager.Application.Services
         private readonly IUserRepository _UserRepository;
         private readonly IJwtTokenService _JwtTokenService;
 
-        public CommandService(IUnitOfWork unitOfWork, ICommandRepository commandRepository, ICommandStatusRepository commandStatusRepository, IArticleRepository articleRepository,IUserRepository userRepository, IJwtTokenService jwtTokenService)
+        public CommandService(IUnitOfWork unitOfWork, ICommandRepository commandRepository, ICommandStatusRepository commandStatusRepository, IArticleRepository articleRepository, IUserRepository userRepository, IJwtTokenService jwtTokenService)
         {
             _UnitOfWork = unitOfWork;
             _CommandRepository = commandRepository;
@@ -106,25 +106,24 @@ namespace LaundryManager.Application.Services
                     Id = c.Id,
                     Reason = c.Reason,
                     Comment = c.Comment,
-                    UserId = c.UserId,         
+                    UserId = c.UserId,
                 })
                 .First();
         }
 
         public async Task<IList<CommandDto>> GetCurrentUserCommandsListAsync()
-        {   
+        {
             var commandsDtos = new List<CommandDto>();
 
             Guid userId = await GetCurrentUserId();
-            var currentUserCommands = await _CommandRepository.FindAsync(c=>c.UserId == userId);
-          
+            var currentUserCommands = await _CommandRepository.FindAsync(c => c.UserId == userId, c => c.Status);
+
             commandsDtos = currentUserCommands.Select(
                 c => new CommandDto
                 {
                     Id = c.Id,
                     Reason = c.Reason,
                     Comment = c.Comment,
-                    UserId = c.UserId,
                     StatusName = c.Status?.Name!,
                 }).ToList();
 

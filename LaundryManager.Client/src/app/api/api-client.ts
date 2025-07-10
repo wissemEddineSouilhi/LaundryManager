@@ -139,7 +139,7 @@ export class Client {
     /**
      * @return OK
      */
-    getCommands(): Observable<void> {
+    getCommands(): Observable<CommandDto[]> {
         let url_ = this.baseUrl + "/Command/GetCommands";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -147,6 +147,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "text/plain"
             })
         };
 
@@ -157,14 +158,14 @@ export class Client {
                 try {
                     return this.processGetCommands(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
+                    return _observableThrow(e) as any as Observable<CommandDto[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<void>;
+                return _observableThrow(response_) as any as Observable<CommandDto[]>;
         }));
     }
 
-    protected processGetCommands(response: HttpResponseBase): Observable<void> {
+    protected processGetCommands(response: HttpResponseBase): Observable<CommandDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -173,14 +174,24 @@ export class Client {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(null as any);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(CommandDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(null as any);
+        return _observableOf<[]>(null as any);
     }
 
     /**
@@ -374,6 +385,55 @@ export class ArticleTypeDto implements IArticleTypeDto {
 export interface IArticleTypeDto {
     id?: string;
     name?: string | undefined;
+}
+
+export class CommandDto implements ICommandDto {
+    id?: string;
+    reason?: string | undefined;
+    comment?: string | undefined;
+    statusName?: string | undefined;
+
+    constructor(data?: ICommandDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.reason = _data["reason"];
+            this.comment = _data["comment"];
+            this.statusName = _data["statusName"];
+        }
+    }
+
+    static fromJS(data: any): CommandDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CommandDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["reason"] = this.reason;
+        data["comment"] = this.comment;
+        data["statusName"] = this.statusName;
+        return data;
+    }
+}
+
+export interface ICommandDto {
+    id?: string;
+    reason?: string | undefined;
+    comment?: string | undefined;
+    userId?: string;
+    statusName?: string | undefined;
 }
 
 export class CreateCommandDto implements ICreateCommandDto {

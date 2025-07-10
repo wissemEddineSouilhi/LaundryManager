@@ -1,1 +1,16 @@
-<p>home-page works!</p>
+<p-table [value]="commands" >
+  <ng-template #header>
+    <tr>
+      <th>Reason</th>
+      <th>Comment</th>
+      <th>Status</th>
+    </tr>
+  </ng-template>
+  <ng-template #body let-command>
+    <tr>
+      <td>{{ command.reason }}</td>
+      <td>{{ command.comment }}</td>
+      <td>{{ command.statusName }}</td>
+    </tr>
+  </ng-template>
+</p-table>

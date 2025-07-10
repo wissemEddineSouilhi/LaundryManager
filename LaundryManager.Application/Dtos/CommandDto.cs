@@ -12,7 +12,6 @@ namespace LaundryManager.Application.Dtos
         public Guid Id { get; set; }
         public string Reason { get; set; }
         public string Comment { get; set; }
-        public Guid UserId { get; set; }
         public string StatusName { get; set; }
     }
 }
