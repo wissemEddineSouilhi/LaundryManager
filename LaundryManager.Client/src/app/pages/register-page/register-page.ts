@@ -39,7 +39,7 @@ export class RegisterPage implements OnInit {
       this.client.register(newUser).subscribe({
        next: (response) => {
         alert('User registered successfully!')
-        
+        this.router.navigate(['']);
       },
       error: (err) => {
         
