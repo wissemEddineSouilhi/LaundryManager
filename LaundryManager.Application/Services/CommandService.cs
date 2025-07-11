@@ -115,7 +115,7 @@ namespace LaundryManager.Application.Services
             var commandsDtos = new List<CommandDto>();
 
             Guid userId = await GetCurrentUserId();
-            var currentUserCommands = await _CommandRepository.FindAsync(c => c.UserId == userId, c => c.Status);
+            var currentUserCommands = await _CommandRepository.FindAsync(c => c.UserId == userId, c => c.Status, c => c.Articles);
 
             commandsDtos = currentUserCommands.Select(
                 c => new CommandDto

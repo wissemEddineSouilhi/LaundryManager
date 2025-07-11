@@ -6,6 +6,10 @@ namespace LaundryManager.Infrastructure.Data
 {
     internal class LaundaryDbContext : DbContext
     {
+        /// <summary>
+        /// This constructor is used only for Migrations.
+        /// </summary>
+        public LaundaryDbContext() { }
         public LaundaryDbContext(DbContextOptions<LaundaryDbContext> options) : base(options)
         {
         }
@@ -99,7 +103,8 @@ namespace LaundryManager.Infrastructure.Data
                       .HasForeignKey(a => a.ArticleTypeId);
 
                 entity.HasOne(a => a.Command)
-                      .WithMany()
+                      .WithMany(a=>a.Articles)
+                      .OnDelete(DeleteBehavior.Cascade)
                       .HasForeignKey(a => a.CommandId);
             });
 

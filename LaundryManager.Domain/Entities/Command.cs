@@ -17,5 +17,6 @@ namespace LaundryManager.Domain.Entities
         public Guid UserId { get; set; }
         public CommandStatus Status { get; set; }
         public Guid StatusId {  get; set; }
+        public ICollection<Article> Articles { get; set; } = new List<Article>();   
     }
 }
