@@ -24,13 +24,9 @@ export class App implements OnInit{
                 routerLink: ['/home']
             },
             {
-                label: 'create Command',
-                icon: 'pi pi-star',
-                routerLink: ['/create-command']
-            },
-            {
-                label: 'Contactez Nous',
-                icon: 'pi pi-envelope'
+                label: 'Deconnecter',
+                icon: 'pi pi-sign-out',
+                command: () => this.logout()
             }
         ]
 
@@ -38,8 +34,13 @@ export class App implements OnInit{
 
   get hideLayout(): boolean {
 
-    const routes = ['/login', '/register']; // Add more routes as needed
+    const routes = ['/login', '/register']; 
     return routes.includes(this.router.url);
     
+  }
+
+  logout(){
+    localStorage.removeItem('accessToken');
+     this.router.navigate(['/login']);
   }
 }
