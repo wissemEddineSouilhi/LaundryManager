@@ -1,16 +1,55 @@
-<p-table [value]="commands" >
-  <ng-template #header>
-    <tr>
-      <th>Reason</th>
-      <th>Comment</th>
-      <th>Status</th>
-    </tr>
-  </ng-template>
-  <ng-template #body let-command>
-    <tr>
-      <td>{{ command.reason }}</td>
-      <td>{{ command.comment }}</td>
-      <td>{{ command.statusName }}</td>
-    </tr>
-  </ng-template>
+<div class="card">
+ <p-table [value]="commands" [tableStyle]="{ 'min-width': '50rem' }" [paginator]="true" [rows]="5">
+      <ng-template #header>
+        <tr>
+          <th class="w-1/6">Reason</th>
+          <th class="w-1/6">Comment</th>
+          <th class="w-1/6">Status</th>
+        </tr>
+      </ng-template>
+
+      <ng-template #body let-command>
+        <tr>
+          <td>{{ command.reason }}</td>
+          <td>{{ command.comment }}</td>
+          <td>
+            <p-tag 
+               [value]="command.statusName" 
+               [rounded]="true" 
+               [severity]="getStatusSeverity(command.statusName)">
+            </p-tag>
+          </td>
+          <td>
+                <p-button (onClick)="showDetails(command)" icon="pi pi-eye" />
+          </td>
+
+        </tr>
+      </ng-template>
 </p-table>
+
+ <p-dialog 
+  header="Command Détails" 
+  [(visible)]="dialogVisible" 
+  [modal]="true" 
+  [style]="{width: '600px'}" 
+  [closable]="true"
+>
+  <div *ngIf="selectedCommand">
+    <h4>Motif: {{ selectedCommand.reason }}</h4>
+    <p><strong>Commentaire:</strong> {{ selectedCommand.comment }}</p>
+    <p><strong>Statut:</strong> {{ selectedCommand.statusName }}</p>
+
+    <h5 class="mt-3">Articles</h5>
+    <ul *ngIf="selectedCommand.articles?.length; else noArticles">
+      <li *ngFor="let article of selectedCommand.articles">
+        {{ article.name }} ({{ article.quantity }})
+      </li>
+    </ul>
+    <ng-template #noArticles>
+      <p>No articles found.</p>
+    </ng-template>
+  </div>
+</p-dialog>
+</div>
+
+

@@ -105,8 +105,7 @@ namespace LaundryManager.Application.Services
                 {
                     Id = c.Id,
                     Reason = c.Reason,
-                    Comment = c.Comment,
-                    UserId = c.UserId,
+                    Comment = c.Comment
                 })
                 .First();
         }
