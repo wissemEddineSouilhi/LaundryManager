@@ -27,7 +27,7 @@ commands: CommandDto[] = [];
   }
 
   dialogVisible: boolean = false;
-  selectedCommand: any = new CommandDto();
+  selectedCommand: CommandDto = new CommandDto();
 
     loadCommands(): void {
     this.client.getCommands().subscribe({
@@ -54,7 +54,7 @@ commands: CommandDto[] = [];
 
 
 
-showDetails(command: any) {
+showDetails(command: CommandDto) {
   this.selectedCommand = command;
   this.dialogVisible = true;
 }

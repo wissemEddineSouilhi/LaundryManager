@@ -19,10 +19,17 @@ namespace LaundryManager.Application.Services
         private readonly ICommandRepository _CommandRepository;
         private readonly ICommandStatusRepository _CommandStatusRepository;
         private readonly IArticleRepository _ArticleRepository;
+        private readonly IArticleTypeRepository _ArticleTypeRepository;
         private readonly IUserRepository _UserRepository;
         private readonly IJwtTokenService _JwtTokenService;
 
-        public CommandService(IUnitOfWork unitOfWork, ICommandRepository commandRepository, ICommandStatusRepository commandStatusRepository, IArticleRepository articleRepository, IUserRepository userRepository, IJwtTokenService jwtTokenService)
+        public CommandService(IUnitOfWork unitOfWork,
+            ICommandRepository commandRepository,
+            ICommandStatusRepository commandStatusRepository, 
+            IArticleRepository articleRepository, 
+            IUserRepository userRepository,
+            IArticleTypeRepository articleTypeRepository,
+            IJwtTokenService jwtTokenService)
         {
             _UnitOfWork = unitOfWork;
             _CommandRepository = commandRepository;
@@ -30,6 +37,7 @@ namespace LaundryManager.Application.Services
             _ArticleRepository = articleRepository;
             _JwtTokenService = jwtTokenService;
             _UserRepository = userRepository;
+            _ArticleTypeRepository = articleTypeRepository;
 
         }
 
@@ -69,6 +77,7 @@ namespace LaundryManager.Application.Services
                     CommandId = command.Id,
                     Name = articleDto.Name,
                     Description = articleDto.Description,
+                    Qauntity = articleDto.Quantity,
                     CreationDate = DateTime.UtcNow
                 };
                 await _ArticleRepository.AddAsync(article);
@@ -116,7 +125,7 @@ namespace LaundryManager.Application.Services
 
             Guid userId = await GetCurrentUserId();
             var currentUserCommands = await _CommandRepository.FindAsync(c => c.UserId == userId, c => c.Status, c => c.Articles);
-
+            var articleTypes = await _ArticleTypeRepository.GetAllAsync();
             commandsDtos = currentUserCommands.Select(
                 c => new CommandDto
                 {
@@ -124,6 +133,14 @@ namespace LaundryManager.Application.Services
                     Reason = c.Reason,
                     Comment = c.Comment,
                     StatusName = c.Status?.Name!,
+                    Articles = c.Articles.Select(a => new ArticleDto
+                    {
+                        Name = a.Name,
+                        Description = a.Description,
+                        ArticleTypeId = a.ArticleTypeId,
+                        ArticleTypeName = articleTypes.Single(at => at.Id == a.ArticleTypeId).Name,
+                        Quantity = a.Qauntity,
+                    }).ToList(),
                 }).ToList();
 
             return commandsDtos;

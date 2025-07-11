@@ -13,5 +13,6 @@ namespace LaundryManager.Application.Dtos
         public string Reason { get; set; }
         public string Comment { get; set; }
         public string StatusName { get; set; }
+        public List<ArticleDto> Articles { get; set; }
     }
 }

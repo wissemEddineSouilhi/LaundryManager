@@ -303,10 +303,60 @@ export class Client {
     }
 }
 
+export class AddArticleDto implements IAddArticleDto {
+    name?: string | undefined;
+    description?: string | undefined;
+    quantity?: number;
+    articleTypeId?: string;
+
+    constructor(data?: IAddArticleDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.quantity = _data["quantity"];
+            this.articleTypeId = _data["articleTypeId"];
+        }
+    }
+
+    static fromJS(data: any): AddArticleDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddArticleDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["quantity"] = this.quantity;
+        data["articleTypeId"] = this.articleTypeId;
+        return data;
+    }
+}
+
+export interface IAddArticleDto {
+    name?: string | undefined;
+    description?: string | undefined;
+    quantity?: number;
+    articleTypeId?: string;
+}
+
 export class ArticleDto implements IArticleDto {
     name?: string | undefined;
     description?: string | undefined;
     articleTypeId?: string;
+    articleTypeName?: string | undefined;
+    quantity?: number;
 
     constructor(data?: IArticleDto) {
         if (data) {
@@ -322,6 +372,8 @@ export class ArticleDto implements IArticleDto {
             this.name = _data["name"];
             this.description = _data["description"];
             this.articleTypeId = _data["articleTypeId"];
+            this.articleTypeName = _data["articleTypeName"];
+            this.quantity = _data["quantity"];
         }
     }
 
@@ -337,6 +389,8 @@ export class ArticleDto implements IArticleDto {
         data["name"] = this.name;
         data["description"] = this.description;
         data["articleTypeId"] = this.articleTypeId;
+        data["articleTypeName"] = this.articleTypeName;
+        data["quantity"] = this.quantity;
         return data;
     }
 }
@@ -345,6 +399,8 @@ export interface IArticleDto {
     name?: string | undefined;
     description?: string | undefined;
     articleTypeId?: string;
+    articleTypeName?: string | undefined;
+    quantity?: number;
 }
 
 export class ArticleTypeDto implements IArticleTypeDto {
@@ -392,6 +448,7 @@ export class CommandDto implements ICommandDto {
     reason?: string | undefined;
     comment?: string | undefined;
     statusName?: string | undefined;
+    articles?: ArticleDto[] | undefined;
 
     constructor(data?: ICommandDto) {
         if (data) {
@@ -408,6 +465,11 @@ export class CommandDto implements ICommandDto {
             this.reason = _data["reason"];
             this.comment = _data["comment"];
             this.statusName = _data["statusName"];
+            if (Array.isArray(_data["articles"])) {
+                this.articles = [] as any;
+                for (let item of _data["articles"])
+                    this.articles!.push(ArticleDto.fromJS(item));
+            }
         }
     }
 
@@ -424,6 +486,11 @@ export class CommandDto implements ICommandDto {
         data["reason"] = this.reason;
         data["comment"] = this.comment;
         data["statusName"] = this.statusName;
+        if (Array.isArray(this.articles)) {
+            data["articles"] = [];
+            for (let item of this.articles)
+                data["articles"].push(item);
+        }
         return data;
     }
 }
@@ -432,14 +499,14 @@ export interface ICommandDto {
     id?: string;
     reason?: string | undefined;
     comment?: string | undefined;
-    userId?: string;
     statusName?: string | undefined;
+    articles?: ArticleDto[] | undefined;
 }
 
 export class CreateCommandDto implements ICreateCommandDto {
     reason?: string | undefined;
     comment?: string | undefined;
-    articles?: ArticleDto[] | undefined;
+    articles?: AddArticleDto[] | undefined;
 
     constructor(data?: ICreateCommandDto) {
         if (data) {
@@ -457,7 +524,7 @@ export class CreateCommandDto implements ICreateCommandDto {
             if (Array.isArray(_data["articles"])) {
                 this.articles = [] as any;
                 for (let item of _data["articles"])
-                    this.articles!.push(ArticleDto.fromJS(item));
+                    this.articles!.push(AddArticleDto.fromJS(item));
             }
         }
     }
@@ -485,7 +552,7 @@ export class CreateCommandDto implements ICreateCommandDto {
 export interface ICreateCommandDto {
     reason?: string | undefined;
     comment?: string | undefined;
-    articles?: ArticleDto[] | undefined;
+    articles?: AddArticleDto[] | undefined;
 }
 
 export class CreateUserDto implements ICreateUserDto {

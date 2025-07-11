@@ -96,6 +96,7 @@ namespace LaundryManager.Infrastructure.Data
 
                 entity.Property(a => a.Name).IsRequired();
                 entity.Property(a => a.Description);
+                entity.Property(a => a.Qauntity).IsRequired();
                 entity.Property(a => a.CreationDate).IsRequired();
 
                 entity.HasOne(a => a.ArticleType)
