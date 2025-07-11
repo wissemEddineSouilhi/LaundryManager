@@ -7,6 +7,7 @@ import { routes } from './app.routes';
 import { API_BASE_URL } from './api/api-client';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './api/interseptor';
+import{environment} from '../environnement'
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,7 +21,7 @@ export const appConfig: ApplicationConfig = {
                 preset: Aura
             }
         }),
-    { provide: API_BASE_URL, useValue: 'https://localhost:7223' },  
+    { provide: API_BASE_URL, useValue: environment.apiBaseUrl },  
     provideHttpClient(
       withInterceptors([authInterceptor])
     )
