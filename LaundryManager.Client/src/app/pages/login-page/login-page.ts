@@ -54,7 +54,7 @@ export class LoginPage implements OnInit {
            
       },
       error: (err) => {
-        alert('Authentication failed: ' + err.message)
+        alert(' Authentification échoué ')
       },
     });
     }
