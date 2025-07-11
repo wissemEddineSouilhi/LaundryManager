@@ -22,10 +22,10 @@
           <td>
                 <p-button (onClick)="showDetails(command)" icon="pi pi-eye" styleClass="p-button-info" />
           </td>
-           <td *ngIf="isUserAdmin()">
+           <td *ngIf="showValidateButton(command.statusName)">
                 <p-button (onClick)="ValidateComand(command.id)" icon="pi pi-thumbs-up-fill" />
           </td>
-          <td *ngIf="isUserAdmin()">
+          <td *ngIf="showRejectButton(command.statusName)">
                 <p-button (onClick)="RejectComand(command.id)" icon="pi pi-times" styleClass="p-button-danger"  />
           </td>
 

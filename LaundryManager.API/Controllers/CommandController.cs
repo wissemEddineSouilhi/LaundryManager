@@ -39,5 +39,21 @@ namespace LaundryManager.API.Controllers
             var commands = await _CommandService.GetAllCommandsListAsync();
             return Ok(commands);
         }
+
+        [Authorize(Roles = nameof(RoleEnum.Admin))]
+        [HttpPost("ValidateCommand")]
+        public async Task<ActionResult> ValidateCommand(ValidateCommandDto validateCommandDto)
+        {
+            await _CommandService.ValidateCommandAsync(validateCommandDto.CommandId);
+            return Ok();
+        }
+
+        [Authorize(Roles = nameof(RoleEnum.Admin))]
+        [HttpPost("RejectCommand")]
+        public async Task<ActionResult> RejectCommand(RejectCommandDto rejectCommandDto)
+        {
+            await _CommandService.RejectCommandAsync(rejectCommandDto.CommandId);
+            return Ok();
+        }
     }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Client, CommandDto } from '../../api/api-client';
-import { Router } from '@angular/router';
+import { Client, CommandDto, RejectCommandDto, ValidateCommandDto } from '../../api/api-client';
+import { Router,RouterModule } from '@angular/router';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
@@ -53,22 +53,31 @@ constructor( private client: Client,
   }
 
 
+
   getStatusSeverity(status: string): string {
   
     if (status===undefined) {
       return ""
     }
     switch (status.toLowerCase()) {
-      case 'approved':
+      case 'valid':
         return 'success';
       case 'pending':
-        return 'warning';
-      case 'rejected':
+        return 'contrast';
+      case 'invalid':
         return 'danger';
       default:
         return 'info';
     }
   
+  }
+
+  showValidateButton(status: string){
+      return this.isUserAdmin() && status.toLowerCase()!== "valid"
+  }
+
+  showRejectButton(status: string){
+      return this.isUserAdmin() && status.toLowerCase()!== "invalid"
   }
 
   getSelectedComandSeverity(): string{
@@ -92,10 +101,30 @@ isUserAdmin():boolean{
 }
 
 ValidateComand(id:string){
-
+  if (this.isUserAdmin()) {
+        let validateCommandDto: ValidateCommandDto = new ValidateCommandDto();
+        validateCommandDto.commandId = id;
+        
+        this.client.validateCommand(validateCommandDto).subscribe({
+           next: () => {
+                this.loadCommands();
+            },
+            error: (err) => console.error('Error', err)
+        });
+      }
 }
 
 RejectComand(id:string){
-
+if (this.isUserAdmin()) {
+        let rejectCommandDto: RejectCommandDto = new RejectCommandDto();
+        rejectCommandDto.commandId = id;
+        
+        this.client.rejectCommand(rejectCommandDto).subscribe({
+           next: () => {
+                this.loadCommands();
+            },
+            error: (err) => console.error('Error', err)
+        });
+      }
 }
 }

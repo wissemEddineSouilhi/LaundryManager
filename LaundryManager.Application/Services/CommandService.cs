@@ -144,5 +144,21 @@ namespace LaundryManager.Application.Services
 
             return commandsDtos;
         }
+
+        public async Task ValidateCommandAsync(Guid commandId)
+        {
+            var command = (await _CommandRepository.FindAsync(c=>c.Id == commandId)).First();
+            command.StatusId = (await _CommandStatusRepository.FindAsync(x => x.Code == (int)CommandStatusEnum.Valid)).First().Id;
+            _CommandRepository.Update(command);
+            await _UnitOfWork.SaveChangesAsync();
+        }
+
+        public async Task RejectCommandAsync(Guid commandId)
+        {
+            var command = (await _CommandRepository.FindAsync(c => c.Id == commandId)).First();
+            command.StatusId = (await _CommandStatusRepository.FindAsync(x => x.Code == (int)CommandStatusEnum.Invalid)).First().Id;
+            _CommandRepository.Update(command);
+            await _UnitOfWork.SaveChangesAsync();
+        }
     }
 }

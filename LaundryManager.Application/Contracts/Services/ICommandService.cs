@@ -16,5 +16,7 @@ namespace LaundryManager.Application.Contracts.Services
         Task<IList<CommandDto>> GetCurrentUserCommandsListAsync();
         Task<IList<CommandDto>> GetAllCommandsListAsync();
         Task<CommandDto> GetCommandDetails(Guid commandId);
+        Task ValidateCommandAsync(Guid commandId);
+        Task RejectCommandAsync(Guid commandId);
     }
 }

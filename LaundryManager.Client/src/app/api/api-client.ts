@@ -256,6 +256,110 @@ export class Client {
      * @param body (optional) 
      * @return OK
      */
+    validateCommand(body: ValidateCommandDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/Command/ValidateCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processValidateCommand(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processValidateCommand(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processValidateCommand(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
+    rejectCommand(body: RejectCommandDto | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/Command/RejectCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRejectCommand(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRejectCommand(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processRejectCommand(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(null as any);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return OK
+     */
     login(body: LoginDto | undefined): Observable<TokenDto> {
         let url_ = this.baseUrl + "/User/Login";
         url_ = url_.replace(/[?&]$/, "");
@@ -705,6 +809,42 @@ export interface ILoginDto {
     password?: string | undefined;
 }
 
+export class RejectCommandDto implements IRejectCommandDto {
+    commandId?: string;
+
+    constructor(data?: IRejectCommandDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.commandId = _data["commandId"];
+        }
+    }
+
+    static fromJS(data: any): RejectCommandDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new RejectCommandDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["commandId"] = this.commandId;
+        return data;
+    }
+}
+
+export interface IRejectCommandDto {
+    commandId?: string;
+}
+
 export class TokenDto implements ITokenDto {
     tokenJwt?: string | undefined;
 
@@ -739,6 +879,42 @@ export class TokenDto implements ITokenDto {
 
 export interface ITokenDto {
     tokenJwt?: string | undefined;
+}
+
+export class ValidateCommandDto implements IValidateCommandDto {
+    commandId?: string;
+
+    constructor(data?: IValidateCommandDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.commandId = _data["commandId"];
+        }
+    }
+
+    static fromJS(data: any): ValidateCommandDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ValidateCommandDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["commandId"] = this.commandId;
+        return data;
+    }
+}
+
+export interface IValidateCommandDto {
+    commandId?: string;
 }
 
 export class ApiException extends Error {
