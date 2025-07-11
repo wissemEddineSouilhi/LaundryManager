@@ -1,4 +1,5 @@
 ﻿using LaundryManager.Domain.Contracts.Security;
+using LaundryManager.Domain.Entities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -18,7 +19,7 @@ namespace LaundryManager.Infrastructure.Security
             _Configuration = configuration;
             _HttpContextAccessor = httpContextAccessor;
         }
-        public string GenerateToken(string userName)
+        public string GenerateToken(User user)
         {
             var JwtKey = _Configuration.GetValue<string>("JwtKey");
             if (string.IsNullOrEmpty(JwtKey))
@@ -32,7 +33,8 @@ namespace LaundryManager.Infrastructure.Security
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                        new Claim(ClaimTypes.Name, userName)
+                        new Claim(ClaimTypes.Name, user.Email),
+                        new Claim(ClaimTypes.Role, user.Role.Name)
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(

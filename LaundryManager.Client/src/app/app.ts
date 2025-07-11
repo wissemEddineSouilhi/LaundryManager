@@ -3,7 +3,7 @@ import { RouterOutlet,Router } from '@angular/router';
 import { Menubar  } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import {CommonModule} from '@angular/common';
-
+import{AuthService} from './services/auth-service'
 
 @Component({
   selector: 'app-root',
@@ -12,7 +12,7 @@ import {CommonModule} from '@angular/common';
   styleUrl: './app.scss'
 })
 export class App implements OnInit{
-  constructor(public router: Router) {}
+  constructor(public router: Router ,private authService: AuthService) {}
   protected title = 'LaundryManager.Client';
  items: MenuItem[] | undefined;
 
@@ -40,7 +40,7 @@ export class App implements OnInit{
   }
 
   logout(){
-    localStorage.removeItem('accessToken');
+    this.authService.removeToken();
      this.router.navigate(['/login']);
   }
 }

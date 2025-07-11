@@ -1,6 +1,7 @@
 ﻿using LaundryManager.Application.Contracts.Services;
 using LaundryManager.Application.Dtos;
 using LaundryManager.Domain.Contracts.Security;
+using LaundryManager.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,6 +30,13 @@ namespace LaundryManager.API.Controllers
         public async Task<ActionResult<IList<CommandDto>>> GetCurrentUserCommands()
         {
             var commands = await _CommandService.GetCurrentUserCommandsListAsync();
+            return Ok(commands);
+        }
+        [Authorize(Roles = nameof(RoleEnum.Admin))]
+        [HttpGet("GetAllCommandsForAdmin")]
+        public async Task<ActionResult<IList<CommandDto>>> GetAllCommandsForAdmin()
+        {
+            var commands = await _CommandService.GetAllCommandsListAsync();
             return Ok(commands);
         }
     }

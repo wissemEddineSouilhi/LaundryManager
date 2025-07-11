@@ -8,6 +8,7 @@ import { CardModule } from 'primeng/card';
 import {Client, LoginDto} from '../../api/api-client'
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
+import{AuthService} from '../../services/auth-service'
 @Component({
   selector: 'app-login-page',
   imports: [
@@ -29,6 +30,7 @@ export class LoginPage implements OnInit {
     private fb: FormBuilder,
     private client: Client,
     private router: Router,
+    private authService: AuthService
   ) {}
   ngOnInit(): void {
      this.loginForm = this.fb.group({
@@ -46,12 +48,10 @@ export class LoginPage implements OnInit {
        next: (response) => {
 
         if(response.tokenJwt !== undefined){
-          localStorage.setItem('accessToken', response.tokenJwt?.toString());
-    
-        this.router.navigate(['']);
+          this.authService.setToken(response.tokenJwt?.toString())
+          this.router.navigate(['']);
         }
-        
-        
+           
       },
       error: (err) => {
         alert('Authentication failed: ' + err.message)

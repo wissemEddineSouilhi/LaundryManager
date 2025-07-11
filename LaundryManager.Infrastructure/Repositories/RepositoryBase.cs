@@ -42,9 +42,15 @@ namespace LaundryManager.Infrastructure.Repositories
             return await query.Where(predicate).ToListAsync();
         }
 
-        public async Task<IList<T>> GetAllAsync()
+        public async Task<IList<T>> GetAllAsync(params Expression<Func<T, object>>[] includes)
         {
-            return await _DbSet.ToListAsync();
+            IQueryable<T> query = _DbSet;
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            return await query.ToListAsync();
         }
 
         public void Remove(T entity)

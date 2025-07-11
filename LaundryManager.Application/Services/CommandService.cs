@@ -25,8 +25,8 @@ namespace LaundryManager.Application.Services
 
         public CommandService(IUnitOfWork unitOfWork,
             ICommandRepository commandRepository,
-            ICommandStatusRepository commandStatusRepository, 
-            IArticleRepository articleRepository, 
+            ICommandStatusRepository commandStatusRepository,
+            IArticleRepository articleRepository,
             IUserRepository userRepository,
             IArticleTypeRepository articleTypeRepository,
             IJwtTokenService jwtTokenService)
@@ -121,34 +121,28 @@ namespace LaundryManager.Application.Services
 
         public async Task<IList<CommandDto>> GetCurrentUserCommandsListAsync()
         {
-            var commandsDtos = new List<CommandDto>();
-
             Guid userId = await GetCurrentUserId();
             var currentUserCommands = await _CommandRepository.FindAsync(c => c.UserId == userId, c => c.Status, c => c.Articles);
             var articleTypes = await _ArticleTypeRepository.GetAllAsync();
-            commandsDtos = currentUserCommands.Select(
-                c => new CommandDto
-                {
-                    Id = c.Id,
-                    Reason = c.Reason,
-                    Comment = c.Comment,
-                    StatusName = c.Status?.Name!,
-                    Articles = c.Articles.Select(a => new ArticleDto
-                    {
-                        Name = a.Name,
-                        Description = a.Description,
-                        ArticleTypeId = a.ArticleTypeId,
-                        ArticleTypeName = articleTypes.Single(at => at.Id == a.ArticleTypeId).Name,
-                        Quantity = a.Qauntity,
-                    }).ToList(),
-                }).ToList();
+            var commandsDtos = Mappers.CommandMappers.MapCommandsToDtos(currentUserCommands, articleTypes);
 
             return commandsDtos;
         }
 
+
+
         public async Task SetCommandStatusAsync(Guid commandId, CommandStatusEnum commandStatusEnum)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IList<CommandDto>> GetAllCommandsListAsync()
+        {
+            var currentUserCommands = await _CommandRepository.GetAllAsync(c => c.Status, c => c.Articles);
+            var articleTypes = await _ArticleTypeRepository.GetAllAsync();
+            var commandsDtos = Mappers.CommandMappers.MapCommandsToDtos(currentUserCommands, articleTypes);
+
+            return commandsDtos;
         }
     }
 }

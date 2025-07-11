@@ -16,7 +16,7 @@ namespace LaundryManager.Application.Services
         private readonly IPasswordHasher _PasswordHasher;
         private readonly IJwtTokenService _JwtTokenService;
 
-        public UserService(IUnitOfWork unitOfWork, IUserRepository userRepository, IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService,IRoleRepository roleRepository)
+        public UserService(IUnitOfWork unitOfWork, IUserRepository userRepository, IPasswordHasher passwordHasher, IJwtTokenService jwtTokenService, IRoleRepository roleRepository)
         {
             _UnitOfWork = unitOfWork;
             _UserRepository = userRepository;
@@ -37,7 +37,7 @@ namespace LaundryManager.Application.Services
                 throw new Exception("User not found");
             }
 
-            var users = await _UserRepository.FindAsync(u => u.Email == loginDto.UserName);
+            var users = await _UserRepository.FindAsync(u => u.Email == loginDto.UserName, u => u.Role);
             if (users == null || !users.Any())
             {
                 throw new Exception("User not found");
@@ -53,7 +53,7 @@ namespace LaundryManager.Application.Services
                 throw new Exception("Invalid password");
             }
 
-           var token = _JwtTokenService.GenerateToken(users.First().Email);
+            var token = _JwtTokenService.GenerateToken(users.First());
 
             return new TokenDto { TokenJwt = token };
 

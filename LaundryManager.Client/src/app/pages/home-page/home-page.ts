@@ -8,6 +8,7 @@ import { Tag } from 'primeng/tag';
 import { PopoverModule } from 'primeng/popover';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
+import { AuthService } from '../../services/auth-service';
 
 
 
@@ -19,21 +20,36 @@ import { ButtonModule } from 'primeng/button';
 })
 export class HomePage implements OnInit {
 
-constructor( private client: Client, private router: Router,) {}
 commands: CommandDto[] = [];
-    ngOnInit() {
-       this.loadCommands();
-   
+dialogVisible: boolean = false;
+selectedCommand: CommandDto = new CommandDto();
+
+constructor( private client: Client, 
+  private router: Router,
+  private authService: AuthService) {}
+
+
+    
+  ngOnInit() {
+    this.loadCommands();
   }
 
-  dialogVisible: boolean = false;
-  selectedCommand: CommandDto = new CommandDto();
 
     loadCommands(): void {
-    this.client.getCommands().subscribe({
-      next: (data) => this.commands = data,
-      error: (err) => console.error('Error loading comands', err)
-    });
+      if (!this.isUserAdmin()) {
+        
+        this.client.getCommands().subscribe({
+            next: (data) => this.commands = data,
+            error: (err) => console.error('Error loading comands', err)
+        });
+      } else {
+
+        this.client.getAllCommandsForAdmin().subscribe({
+            next: (data) => this.commands = data,
+            error: (err) => console.error('Error loading comands', err)
+        });
+      }
+    
   }
 
 
@@ -71,4 +87,15 @@ goToCreatePage(): void {
   this.router.navigate(['/create-command']); // ← modifie l'URL selon ta route
 }
 
+isUserAdmin():boolean{
+  return this.authService.isUserAdmin();
+}
+
+ValidateComand(id:string){
+
+}
+
+RejectComand(id:string){
+
+}
 }
