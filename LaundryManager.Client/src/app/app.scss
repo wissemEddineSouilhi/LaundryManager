@@ -1,0 +1,40 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.app-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f5f5f5;
+  text-align: center;
+  padding: 1rem;
+  z-index: 1000; /* makes sure it stays on top */
+  box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
+}
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40px; /* Adjust as needed */
+  background-color: #ffffff;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.app-main {
+  position: absolute;
+  top: 60px; /* height of fixed header */
+  bottom: 60px; /* height of fixed footer */
+  left: 0;
+  right: 0;
+  overflow-y: auto;
+  padding: 2rem 1rem 1rem; /* top padding creates space below header */
+}
+router-outlet, .main-content {
+  padding-bottom: 70px; /* Enough space to avoid being hidden behind footer */
+}

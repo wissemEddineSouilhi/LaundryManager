@@ -5,10 +5,10 @@ import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { Tag } from 'primeng/tag'; 
-import { Popover } from 'primeng/popover';
 import { PopoverModule } from 'primeng/popover';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
+
 
 
 @Component({
@@ -38,6 +38,10 @@ commands: CommandDto[] = [];
 
 
   getStatusSeverity(status: string): string {
+  
+    if (status===undefined) {
+      return ""
+    }
     switch (status.toLowerCase()) {
       case 'approved':
         return 'success';
@@ -51,12 +55,20 @@ commands: CommandDto[] = [];
   
   }
 
+  getSelectedComandSeverity(): string{
+    return this.getStatusSeverity(this.selectedCommand!.statusName!)
+  }
+
 
 
 
 showDetails(command: CommandDto) {
   this.selectedCommand = command;
   this.dialogVisible = true;
+}
+
+goToCreatePage(): void {
+  this.router.navigate(['/create-command']); // ← modifie l'URL selon ta route
 }
 
 }

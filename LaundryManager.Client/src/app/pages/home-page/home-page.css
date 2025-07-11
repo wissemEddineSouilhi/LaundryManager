@@ -1,0 +1,45 @@
+.field {
+  margin-bottom: 1.25rem;
+}
+
+.label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #333;
+}
+
+.text {
+  margin: 0;
+  color: #555;
+}
+
+.article-list {
+  padding-left: 1.2rem;
+  margin: 0;
+  list-style-type: disc;
+  color: #444;
+}
+
+.article-list li {
+  margin-bottom: 0.3rem;
+}
+
+.text-muted {
+  color: #888;
+  font-style: italic;
+}
+
+
+.fab-button {
+  position: fixed;
+  bottom: 4rem;
+  right: 2rem;
+  z-index: 1000;
+  width: 4.5rem;
+  height: 4.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
