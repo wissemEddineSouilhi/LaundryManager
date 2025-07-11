@@ -47,7 +47,6 @@
     <p><strong>Motif:</strong> {{ selectedCommand.reason }}</p>
     <p><strong>Commentaire:</strong> {{ selectedCommand.comment }}</p>
     <p><strong>Statut:</strong> 
-        {{ selectedCommand.statusName }}
         <p-tag
                [value]="selectedCommand.statusName!" 
                [rounded]="true" 
@@ -81,12 +80,6 @@
         </tr>
       </ng-template>
     </p-table>
-    <!-- <ul *ngIf="selectedCommand.articles?.length; else noArticles">
-      <li *ngFor="let article of selectedCommand.articles">
-        {{ article.name }} ({{ article.quantity }})
-      </li>
-    </ul>
-    -->
     <ng-template #noArticles>
       <p>No articles found.</p>
     </ng-template> 
